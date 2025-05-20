@@ -1,6 +1,6 @@
-# Go Template Project
+# Type Ninjas
 
-A starter template for Go backend development with PostgreSQL, SQLC and hot-reloading.
+Code faster. Type smarter. Be a Type-Ninja.
 
 ## Prerequisites
 
@@ -15,8 +15,8 @@ A starter template for Go backend development with PostgreSQL, SQLC and hot-relo
 1. Clone the repository
 
 ```bash
-git clone https://github.com/AD12-codes/go-template.git
-cd go-template
+git clone https://github.com/AD12-codes/type-ninjas.git
+cd type-ninjas
 ```
 
 2. Install dependencies
@@ -52,7 +52,7 @@ make test
 ├── cmd/          # Main application entrypoint
 ├── internal/     # Internal application code
 ├── db/           # Database migrations and queries
-├── tools/        # Development tooling
+├── utils/        # Development utilities
 └── Makefile      # Common development tasks
 ```
 

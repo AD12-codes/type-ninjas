@@ -8,8 +8,8 @@ import (
 	"runtime"
 	"time"
 
+	// "github.com/AD12-codes/go-template/internal/users"
 	"github.com/AD12-codes/go-template/db"
-	"github.com/AD12-codes/go-template/internal/users"
 	"github.com/labstack/echo/v4"
 )
 
@@ -21,6 +21,7 @@ type HealthResponse struct {
 	Hostname  string    `json:"hostname"`
 	GoVersion string    `json:"go_version"`
 	Env       string    `json:"env"`
+	DBStatus  string    `json:"db_status"`
 }
 
 var startTime = time.Now()
@@ -33,7 +34,7 @@ func Run() {
 	pool := db.DbConnection(ctx)
 
 	// sqlc queries setup
-	queries := db.New(pool)
+	// queries := db.New(pool)
 
 	// echo server
 	e := echo.New()
@@ -50,12 +51,20 @@ func Run() {
 			Hostname:  hostname,
 			GoVersion: runtime.Version(),
 			Env:       os.Getenv("APP_ENV"),
+			DBStatus: func() string {
+				dbCtx, cancel := context.WithTimeout(ctx, 2*time.Second)
+				defer cancel()
+				if err := pool.Ping(dbCtx); err != nil {
+					return "DOWN"
+				}
+				return "UP"
+			}(),
 		}
 		return ec.JSON(http.StatusOK, resp)
 	})
 
 	// all packages route registrations
-	users.RegisterRoutes(e, queries)
+	// users.RegisterRoutes(e, queries)
 
 	// start server
 	port := os.Getenv("PORT")

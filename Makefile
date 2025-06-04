@@ -8,7 +8,7 @@ ifneq (,$(wildcard ./.env))
 endif
 
 # Variables
-APP_NAME := go-template
+APP_NAME := type-ninjas
 BUILD_DIR := bin
 MIGRATIONS_PATH := file://./db/migrations
 

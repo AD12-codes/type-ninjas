@@ -8,9 +8,11 @@ import (
 	"runtime"
 	"time"
 
-	// "github.com/AD12-codes/go-template/internal/users"
-	"github.com/AD12-codes/go-template/db"
+	"github.com/AD12-codes/type-ninjas/db"
+	"github.com/AD12-codes/type-ninjas/internal/users"
+	"github.com/AD12-codes/type-ninjas/utils"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 type HealthResponse struct {
@@ -19,9 +21,9 @@ type HealthResponse struct {
 	Uptime    string    `json:"uptime"`
 	Version   string    `json:"version"`
 	Hostname  string    `json:"hostname"`
-	GoVersion string    `json:"go_version"`
+	GoVersion string    `json:"goVersion"`
 	Env       string    `json:"env"`
-	DBStatus  string    `json:"db_status"`
+	DBStatus  string    `json:"dbStatus"`
 }
 
 var startTime = time.Now()
@@ -34,10 +36,20 @@ func Run() {
 	pool := db.DbConnection(ctx)
 
 	// sqlc queries setup
-	// queries := db.New(pool)
+	queries := db.New(pool)
 
 	// echo server
 	e := echo.New()
+
+	// CORS middleware
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
+
+	// validation middleware
+	e.Validator = utils.NewValidator()
 
 	// health route
 	e.GET("/health", func(ec echo.Context) error {
@@ -63,8 +75,10 @@ func Run() {
 		return ec.JSON(http.StatusOK, resp)
 	})
 
+	v1 := e.Group("/api/v1")
+
 	// all packages route registrations
-	// users.RegisterRoutes(e, queries)
+	users.RegisterRoutes(v1, queries)
 
 	// start server
 	port := os.Getenv("PORT")

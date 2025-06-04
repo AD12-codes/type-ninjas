@@ -1,5 +1,5 @@
--- name: CreateUser :exec
-INSERT INTO users(id, first_name, last_name, email, username, password)
+-- name: RegisterUser :exec
+INSERT INTO users(id, auth0_id, email, username, first_name, last_name)
   VALUES ($1, $2, $3, $4, $5, $6);
 
 -- name: GetUserById :one
@@ -14,14 +14,7 @@ WHERE
 SELECT
   *
 FROM
-  users;
-
--- name: DeleteUser :exec
-UPDATE
   users
-SET
-  deleted_at = $2,
-  is_deleted = $3
 WHERE
-  id = $1;
+  is_deleted = FALSE;
 

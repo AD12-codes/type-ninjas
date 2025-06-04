@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/AD12-codes/go-template/internal/server"
+	"github.com/AD12-codes/type-ninjas/internal/server"
 	"github.com/joho/godotenv"
 )
 
